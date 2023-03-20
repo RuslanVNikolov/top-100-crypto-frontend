@@ -1,9 +1,22 @@
 import './App.css';
-import Login from './modals/Login';
+import { AuthContext } from './auth/AuthContext';
+import Login from './auth/Login';
+import CryptoTable from './content/CryptoTable';
+import { useState } from 'react';
 
 function App() {
+  const [authState, setAuthState] = useState({
+    token: null,
+    isLoggedIn: false,
+  });
+
   return (
-    <Login />
+    <AuthContext.Provider value={{ authState, setAuthState }}>
+      <div className='App'>
+      <Login />
+      <CryptoTable/>
+      </div>
+    </AuthContext.Provider>
   );
 }
 
