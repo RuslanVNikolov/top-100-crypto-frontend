@@ -1,12 +1,9 @@
 import { useState } from 'react';
-import { AuthContext } from './AuthContext';
-import { useContext } from 'react';
 
 const API_BASE_URL = 'http://localhost:8080';
 
-const useAuth = () => {
+const useAuth = (setAuthState) => {
   const [error, setError] = useState();
-  const { setAuthState } = useContext(AuthContext);
 
   const sendAuthRequest = async (newUser, username, password) => {
     const fullPath = `${API_BASE_URL}/auth/${newUser ? 'register' : 'login'}`;

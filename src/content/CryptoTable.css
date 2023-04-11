@@ -1,0 +1,27 @@
+/* CryptoTable.css */
+
+.cryptoTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.cryptoTable th,
+.cryptoTable td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.cryptoTable th {
+  background-color: #031529;
+  color: #fff;
+}
+
+.cryptoTable tr:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.1); /* Adjust the background color to be less aggressive */
+}
+
+.cryptoTable tr:hover {
+  background-color: #2ABF7A; /* Adjust the hover color to be less aggressive */
+}

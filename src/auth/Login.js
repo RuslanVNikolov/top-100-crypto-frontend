@@ -5,8 +5,8 @@ import useAuth from './useAuth';
 
 const Login = (props) => {
   const [isSignUp, setIsSignUp] = useState(false);
-  const { error, sendAuthRequest, validateCredentials } = useAuth();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { error, sendAuthRequest, validateCredentials } = useAuth(props.setAuthState);
 
   const switchFormHandler = () => {
     setIsSignUp((prevIsSignUp) => !prevIsSignUp);
