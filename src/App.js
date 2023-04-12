@@ -12,7 +12,7 @@ function App() {
     username: null,
   });
 
-  const { username } = authState; 
+  const { username } = authState;
 
   return (
     <AuthContext.Provider value={{ authState, setAuthState }}>
@@ -28,10 +28,13 @@ function App() {
                   <Link to="/portfolio">Portfolio</Link>
                 </li>
               )}
+              <li className="login-container">
+                <Login setAuthState={setAuthState} />
+              </li>
             </ul>
           </nav>
           <Routes>
-          <Route path="/" element={<><Login setAuthState={setAuthState} /><CryptoTable /></>} />
+            <Route path="/" element={<CryptoTable />} />
             {username && (
               <Route path="/portfolio" element={<Portfolio />} />
             )}

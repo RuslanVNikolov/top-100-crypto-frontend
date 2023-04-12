@@ -1,4 +1,3 @@
-// Portfolio.js
 import React, { useState, useEffect } from 'react';
 import './Portfolio.css';
 import UserBalances from './UserBalances';
