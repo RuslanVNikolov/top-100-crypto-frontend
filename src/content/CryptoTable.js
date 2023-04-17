@@ -35,7 +35,6 @@ const CryptoTable = () => {
       </tr>
     ));
 
-    console.log("TRANSFORMED:", currencies);
     setCryptos(currencies);
   };
 

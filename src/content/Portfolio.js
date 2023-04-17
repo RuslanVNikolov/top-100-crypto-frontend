@@ -1,29 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import './Portfolio.css';
 import UserBalances from './UserBalances';
+import { AuthContext } from '../auth/AuthContext';
+import { useContext } from 'react';
+
+
+const API_URL = 'http://localhost:8080/portfolios';
 
 const Portfolio = () => {
   const [balances, setBalances] = useState([]);
+  const { authState } = useContext(AuthContext);
+  const { token } = authState;
+  console.log("DA TOKEN " + token)
 
   // Fetch user's crypto balances
-  const fetchBalances = () => {
-    // Replace this with your API call to fetch the user's balances
-    const userBalances = [
-      {
-        id: 'bitcoin',
-        name: 'Bitcoin',
-        symbol: 'BTC',
-        balance: 0.5,
-      },
-      {
-        id: 'ethereum',
-        name: 'Ethereum',
-        symbol: 'ETH',
-        balance: 3,
-      },
-    ];
-
-    setBalances(userBalances);
+  const fetchBalances = async () => {
+    try {
+      // Include the token in the Bearer authorization header
+      const headers = new Headers();
+      headers.append('Authorization', `Bearer ${token}`);
+  
+      // Make the fetch request with the headers
+      const response = await fetch(`${API_URL}`, { headers });
+      const data = await response.json();
+  
+      const userBalances = data.userBalances.map((balance) => ({
+        id: balance.currency.id,
+        name: balance.currency.name,
+        symbol: balance.currency.shortName,
+        balance: parseFloat(balance.amount),
+      }));
+  
+      setBalances(userBalances);
+    } catch (error) {
+      console.error('Error fetching user balances:', error);
+    }
   };
 
   useEffect(() => {

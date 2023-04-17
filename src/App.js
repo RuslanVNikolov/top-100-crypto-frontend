@@ -3,7 +3,7 @@ import { AuthContext } from './auth/AuthContext';
 import Login from './auth/Login';
 import CryptoTable from './content/CryptoTable';
 import Portfolio from './content/Portfolio';
-import { useState, useContext } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 
 function App() {
@@ -11,6 +11,19 @@ function App() {
     token: null,
     username: null,
   });
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem('token');
+    const storedUsername = localStorage.getItem('username');
+
+    if (storedToken && storedUsername) {
+      setAuthState((prevState) => ({
+        ...prevState,
+        token: storedToken,
+        username: storedUsername,
+      }));
+    }
+  }, []);
 
   const { username } = authState;
 
@@ -29,7 +42,7 @@ function App() {
                 </li>
               )}
               <li className="login-container">
-                <Login setAuthState={setAuthState} />
+                <Login />
               </li>
             </ul>
           </nav>

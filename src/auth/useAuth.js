@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-const API_BASE_URL = 'http://localhost:8080';
+const API_URL = 'http://localhost:8080';
 
 const useAuth = (setAuthState) => {
   const [error, setError] = useState();
 
   const sendAuthRequest = async (newUser, username, password) => {
-    const fullPath = `${API_BASE_URL}/auth/${newUser ? 'register' : 'login'}`;
+    const fullPath = `${API_URL}/auth/${newUser ? 'register' : 'login'}`;
     console.log(fullPath)
     const response = await fetch(fullPath, {
       method: 'POST',
@@ -27,9 +27,15 @@ const useAuth = (setAuthState) => {
       console.error(error);
     }
 
-    const token = await response.json();
-    console.log(token);
-    setAuthState({ username: username, token: token});
+    const responseData = await response.json();
+    console.log(responseData);
+    const { token } = responseData;
+    setAuthState({ username: username, token: token });
+
+    // Store the token and username in localStorage
+    localStorage.setItem('token', token);
+    localStorage.setItem('username', username);
+
     return token;
   };
 

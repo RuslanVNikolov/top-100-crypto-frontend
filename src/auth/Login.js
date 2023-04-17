@@ -24,7 +24,11 @@ const Login = (props) => {
 
   const logoutHandler = () => {
     setAuthState({ token: null, username: null });
+  
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
   };
+  
 
   return (
     <div>
