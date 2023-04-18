@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import './Portfolio.css';
 import UserBalances from './UserBalances';
 import { AuthContext } from '../auth/AuthContext';
-import { useContext } from 'react';
-
 
 const API_URL = 'http://localhost:8080/portfolios';
 
@@ -14,7 +12,7 @@ const Portfolio = () => {
   console.log("DA TOKEN " + token)
 
   // Fetch user's crypto balances
-  const fetchBalances = async () => {
+  const fetchBalances = useCallback(async () => {
     try {
       // Include the token in the Bearer authorization header
       const headers = new Headers();
@@ -28,18 +26,18 @@ const Portfolio = () => {
         id: balance.currency.id,
         name: balance.currency.name,
         symbol: balance.currency.shortName,
-        balance: parseFloat(balance.amount),
+        balance: parseFloat(balance.totalAmount),
       }));
   
       setBalances(userBalances);
     } catch (error) {
       console.error('Error fetching user balances:', error);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
     fetchBalances();
-  }, []);
+  }, [fetchBalances]);
 
   const handleOpenModal = () => {
     // Implement logic to open the modal for creating/editing balances
