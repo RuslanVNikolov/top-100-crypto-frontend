@@ -24,11 +24,11 @@ const Login = (props) => {
 
   const logoutHandler = () => {
     setAuthState({ token: null, username: null });
-  
+
     localStorage.removeItem('token');
     localStorage.removeItem('username');
   };
-  
+
 
   return (
     <div>
@@ -48,7 +48,12 @@ const Login = (props) => {
                   </button>
                 </div>
                 <div className={`${classes.modalBody} ${isSignUp ? 'signup-form' : 'login-form'}`}>
-                  <AuthForm isSignUp={isSignUp} onSubmit={submitHandler} onSwitch={switchFormHandler} />
+                  <AuthForm
+                    isSignUp={isSignUp}
+                    onSubmit={submitHandler}
+                    onSwitch={switchFormHandler}
+                    error={error}
+                  />
                 </div>
               </div>
             </div>

@@ -1,8 +1,7 @@
-// AuthForm.js
 import React, { useRef } from 'react';
 import classes from './Login.module.css';
 
-const AuthForm = ({ isSignUp, onSubmit }) => {
+const AuthForm = ({ isSignUp, onSubmit, onSwitch, error }) => {
   const usernameInputRef = useRef();
   const passwordInputRef = useRef();
 
@@ -18,6 +17,11 @@ const AuthForm = ({ isSignUp, onSubmit }) => {
 
   return (
     <form onSubmit={submitHandler} className={classes.modalBody}>
+            {error && (
+        <div className={`${classes.errorBubble}`}>
+          {error.title}: {error.message}
+        </div>
+      )}
       <div className={classes.inputGroup}>
         <label htmlFor="username">Username</label>
         <input id="username" ref={usernameInputRef} type="text" />
