@@ -1,3 +1,4 @@
+// AuthForm.js
 import React, { useRef } from 'react';
 import classes from './Login.module.css';
 
@@ -17,7 +18,7 @@ const AuthForm = ({ isSignUp, onSubmit, onSwitch, error }) => {
 
   return (
     <form onSubmit={submitHandler} className={classes.modalBody}>
-            {error && (
+      {error && (
         <div className={`${classes.errorBubble}`}>
           {error.title}: {error.message}
         </div>
@@ -33,6 +34,9 @@ const AuthForm = ({ isSignUp, onSubmit, onSwitch, error }) => {
       <div className={classes.buttonGroup}>
         <button type="submit" className={classes.loginButton}>
           {isSignUp ? 'Sign up' : 'Login'}
+        </button>
+        <button type="button" className={classes.switchButton} onClick={onSwitch}>
+          {isSignUp ? 'Switch to Login' : 'Switch to Sign Up'}
         </button>
       </div>
     </form>
