@@ -3,6 +3,7 @@ import AuthForm from './AuthForm';
 import classes from './Login.module.css';
 import useAuth from './useAuth';
 import { AuthContext } from './AuthContext';
+import Modal from '../content/Modal'; // Import the new Modal component
 
 const Login = (props) => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -29,7 +30,6 @@ const Login = (props) => {
     localStorage.removeItem('username');
   };
 
-
   return (
     <div>
       {username ? (
@@ -39,24 +39,18 @@ const Login = (props) => {
       ) : (
         <>
           {isModalOpen && (
-            <div className={classes.backdrop}>
-              <div className={classes.modal}>
-                <div className={classes.modalHeader}>
-                  <h2>{isSignUp ? 'Sign Up' : 'Login'}</h2>
-                  <button type="button" className={classes.closeButton} onClick={() => setIsModalOpen(false)}>
-                    &times;
-                  </button>
-                </div>
-                <div className={`${classes.modalBody} ${isSignUp ? 'signup-form' : 'login-form'}`}>
-                  <AuthForm
-                    isSignUp={isSignUp}
-                    onSubmit={submitHandler}
-                    onSwitch={switchFormHandler}
-                    error={error}
-                  />
-                </div>
-              </div>
-            </div>
+            <Modal
+              name={isSignUp ? "Sign Up" : "Login"}
+              show={isModalOpen}
+              onClose={() => setIsModalOpen(false)}
+            >
+              <AuthForm
+                isSignUp={isSignUp}
+                onSubmit={submitHandler}
+                onSwitch={switchFormHandler}
+                error={error}
+              />
+            </Modal>
           )}
           {!isModalOpen && (
             <button className={classes.openButton} onClick={() => setIsModalOpen(true)}>
@@ -67,6 +61,7 @@ const Login = (props) => {
       )}
     </div>
   );
-};
+}
+
 
 export default Login;

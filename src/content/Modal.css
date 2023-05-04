@@ -62,3 +62,14 @@
   cursor: pointer;
   font-weight: bold;
 }
+
+.modalFooterWithButton {
+  padding: 1rem;
+  text-align: right;
+  border-top: 1px solid #eee;
+}
+
+.modalFooterWithoutButton {
+  padding: 0;
+  height: 0;
+}
