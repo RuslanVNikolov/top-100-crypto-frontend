@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import './Modal.css';
 
 const Modal = ({ onClose, crypto, name, children, showCloseButton }) => {
   const headerText = crypto ? crypto.name : name;
+  const [historicalData, setHistoricalData] = useState(null);
 
   const cryptoInfo = crypto ? (
     <>
@@ -27,6 +28,23 @@ const Modal = ({ onClose, crypto, name, children, showCloseButton }) => {
     };
   }, [onClose]);
 
+  useEffect(() => {
+    if (crypto) {
+      const fetchHistoricalData = async () => {
+        try {
+          const response = await fetch(`http://localhost:8080/currencies/history?cmcId=${crypto.cmcId}`);
+          const data = await response.json();
+          setHistoricalData(data);
+          console.log('Historical data fetched:', data);
+        } catch (error) {
+          console.error('Error fetching historical data:', error);
+        }
+      };
+
+      fetchHistoricalData();
+    }
+  }, [crypto]);
+
   return (
     <div className="backdrop">
       <div className="modal">
@@ -37,8 +55,8 @@ const Modal = ({ onClose, crypto, name, children, showCloseButton }) => {
           </button>
         </div>
         <div className="modalBody">{cryptoInfo}</div>
-        <div className={`modalFooter${showCloseButton ? '' : ' modalFooterWithoutButton'}`}>
-          {showCloseButton && (
+        <div className={`modalFooter${crypto ? '' : ' modalFooterWithoutButton'}`}>
+          {showCloseButton && crypto && (
             <button className="closeButtonGreen" onClick={onClose}>
               Close
             </button>
