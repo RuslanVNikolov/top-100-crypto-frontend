@@ -45,6 +45,7 @@
 
 .modalBody {
   padding: 1rem;
+  padding-right: 2rem; /* Add right padding */
 }
 
 .modalFooter {
@@ -77,4 +78,16 @@
 .chartContainer {
   overflow-x: auto;
   max-width: 100%;
+}
+
+.loginModal .modal {
+  width: 400px;
+}
+
+.chartModal .modal {
+  width: 1000px;
+}
+
+.balanceModal .modal {
+  width: 600px;
 }

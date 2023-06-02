@@ -70,7 +70,7 @@ const CryptoTable = () => {
           {cryptos}
         </tbody>
       </table>
-      {isModalOpen && <Modal onClose={closeModal} crypto={selectedCrypto} showCloseButton={true} />}
+      {isModalOpen && <Modal onClose={closeModal} crypto={selectedCrypto} showCloseButton={true} modalSize='large' />}
     </>
   );
 };

@@ -43,6 +43,7 @@ const Login = (props) => {
               name={isSignUp ? "Sign Up" : "Login"}
               show={isModalOpen}
               onClose={() => setIsModalOpen(false)}
+              modalSize='small'
             >
               <AuthForm
                 isSignUp={isSignUp}
