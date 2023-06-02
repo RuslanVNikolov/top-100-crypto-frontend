@@ -91,3 +91,18 @@
 .balanceModal .modal {
   width: 600px;
 }
+
+.modeButton {
+  background: #2abf7a;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.modeButton.active {
+  background: #031529;
+}

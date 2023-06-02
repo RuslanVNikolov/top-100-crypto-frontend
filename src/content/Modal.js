@@ -16,7 +16,11 @@ const modalSizeToClassName = {
 
 const Modal = ({ onClose, crypto, name, children, showCloseButton, onBalanceFormSubmit, modalSize }) => {
 
-  const headerText = crypto ? crypto.name : name;
+  const [mode, setMode] = useState('buy');
+  const actionLabel = mode === 'buy' ? 'Buy' : 'Sell';
+
+  const headerText = onBalanceFormSubmit ? `Add ${actionLabel} Transaction` : crypto ? crypto.name : name;
+
   const [historicalData, setHistoricalData] = useState(null);
 
   const cryptoInfo = crypto ? (
@@ -70,32 +74,35 @@ const Modal = ({ onClose, crypto, name, children, showCloseButton, onBalanceForm
     }
   }, [crypto]);
 
+  const onFormSubmit = (data) => {
+    onBalanceFormSubmit({
+      ...data,
+      amount: mode === 'sell' ? -data.amount : data.amount,
+    });
+  };
+
   return (
     <div className="backdrop">
       <div className={`modal ${modalSizeToClassName[modalSize]}`}>
         <div className="modalHeader">
           <h2>{headerText}</h2>
-          <button className="closeButton" onClick={onClose}>
-            &times;
-          </button>
-        </div>
-        <div className="modalBody">{onBalanceFormSubmit ? <BalanceForm onSubmit={onBalanceFormSubmit} /> : cryptoInfo}</div>
-        <div className={`modalFooter${crypto ? '' : ' modalFooterWithoutButton'}`}>
-          {showCloseButton && crypto && (
-            <button className="closeButtonGreen" onClick={onClose}>
-              Close
-            </button>
+          {onBalanceFormSubmit && (
+            <div>
+              <button className={`modeButton ${mode === 'buy' ? 'active' : ''}`} onClick={() => setMode('buy')}>Buy</button>
+              <button className={`modeButton ${mode === 'sell' ? 'active' : ''}`} onClick={() => setMode('sell')}>Sell</button>
+            </div>
           )}
+          {showCloseButton && <button className="closeButton" onClick={onClose}>X</button>}
+        </div>
+        <div className="modalBody">
+          {onBalanceFormSubmit ? <BalanceForm onSubmit={onFormSubmit} /> : cryptoInfo}
+        </div>
+        <div className="modalFooter">
+          {showCloseButton && <button className="closeButtonGreen" onClick={onClose}>Close</button>}
         </div>
       </div>
     </div>
   );
-};
-
-
-Modal.defaultProps = {
-  showCloseButton: true,
-  modalSize: 'medium',
 };
 
 export default Modal;

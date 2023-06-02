@@ -70,7 +70,7 @@ const Portfolio = () => {
       <h2>Your Portfolio</h2>
       <UserBalances balances={balances} />
       <button className="editButton" onClick={() => setShowModal(true)}>
-        Add Balance
+        Add Transaction
       </button>
       {showModal && (
         <Modal
