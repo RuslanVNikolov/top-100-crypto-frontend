@@ -11,6 +11,7 @@
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
+  font-weight: bold; /* Make the font bold */
 }
 
 .cryptoTable th {
@@ -24,4 +25,18 @@
 
 .cryptoTable tr:hover {
   background-color: #2ABF7A; /* Adjust the hover color to be less aggressive */
+}
+
+.red {
+  color: red;
+}
+
+.green {
+  color: green;
+}
+
+.cryptoTable img {
+  height: 20px;
+  width: 20px;
+  margin-right: 5px;
 }

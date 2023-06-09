@@ -20,23 +20,28 @@ const CryptoTable = () => {
   };
 
   const mapResponse = useCallback((data) => {
-    // Sort the data by market cap in descending order
     const sortedData = data.sort((a, b) => b.marketCap - a.marketCap);
 
-    // Helper function to format numbers with commas as thousand separators
     const numberWithCommas = (x) => {
       return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     };
 
-    const currencies = sortedData.map((currency, index) => (
-      <tr key={currency.id} onClick={() => handleRowClick(currency)}>
-        <td>{index + 1}</td>
-        <td>{currency.name}</td>
-        <td>${numberWithCommas(parseFloat(currency.valueUsd).toFixed(2))}</td>
-        <td>${numberWithCommas(parseFloat(currency.marketCap).toFixed(2))}</td>
-        <td>{currency.change24h}</td>
-      </tr>
-    ));
+    const currencies = sortedData.map((currency, index) => {
+      let change24h = currency.change24h < 0 ? currency.change24h * -1 : currency.change24h;
+
+      return (
+        <tr key={currency.id} onClick={() => handleRowClick(currency)}>
+          <td>{index + 1}</td>
+          <td>{currency.name}</td>
+          <td>${numberWithCommas(parseFloat(currency.valueUsd).toFixed(2))}</td>
+          <td>${numberWithCommas(parseFloat(currency.marketCap).toFixed(0))}</td>
+          <td className={currency.change24h < 0 ? 'red' : 'green'}>
+            <img src={currency.change24h < 0 ? "/red-arrow.png" : "/green-arrow.png"} alt="change" />
+            {numberWithCommas(parseFloat(change24h).toFixed(2))}
+          </td>
+        </tr>
+      );
+    });
 
     setCryptos(currencies);
   }, []); // Add dependencies if any functions or variables inside mapResponse are changing
