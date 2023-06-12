@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useContext } from 'react';
 import Modal from './Modal'; // Import your Modal component
 import './CryptoTable.css';
+import { AuthContext } from '../auth/AuthContext'; // path to your AuthContext
 
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -8,6 +9,9 @@ const CryptoTable = () => {
   const [cryptos, setCryptos] = useState();
   const [selectedCrypto, setSelectedCrypto] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { authState } = useContext(AuthContext);
+  const { token } = authState;
 
   const getCurrencyRequest = async () => {
     const fullPath = `${API_BASE_URL}/currencies/top100`;
@@ -39,16 +43,27 @@ const CryptoTable = () => {
             <img src={currency.change24h < 0 ? "/red-arrow.png" : "/green-arrow.png"} alt="change" />
             {numberWithCommas(parseFloat(change24h).toFixed(2))}
           </td>
+          {token && (
+            <td onClick={handleStarClick}>
+              <img className="clickable-star" src="/star-empty.png" alt="star" />
+            </td>
+          )}
         </tr>
       );
     });
 
     setCryptos(currencies);
-  }, []); // Add dependencies if any functions or variables inside mapResponse are changing
+  }, [token]); // Add dependencies if any functions or variables inside mapResponse are changing
 
   const handleRowClick = (currency) => {
     setSelectedCrypto(currency);
     setIsModalOpen(true);
+  };
+
+  const handleStarClick = (e) => {
+    e.stopPropagation();
+    console.log("CLICKED!")
+    // Add your functionality here
   };
 
   const closeModal = () => {
@@ -69,6 +84,7 @@ const CryptoTable = () => {
             <th>Price</th>
             <th>Market Cap</th>
             <th>24h %</th>
+            {token && <th>Favorite</th>}
           </tr>
         </thead>
         <tbody>
