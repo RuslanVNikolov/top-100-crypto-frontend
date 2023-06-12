@@ -39,20 +39,20 @@ const Portfolio = () => {
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
       headers.append('Content-Type', 'application/json');
-  
+
       const response = await fetch(`${API_URL}/transactions`, {
         method: 'POST',
         headers: headers,
         body: JSON.stringify(formData),
       });
-  
+
       if (!response.ok) {
         throw new Error(`Unable to post transaction (${response.status} ${response.statusText})`);
       }
-  
+
       const data = await response.json();
       console.log(data)
-  
+
       // After successfully posting the transaction, close the modal and re-fetch the balances
       setShowModal(false);
       fetchBalances();
