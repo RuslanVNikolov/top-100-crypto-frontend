@@ -3,7 +3,8 @@ import { AuthContext } from './auth/AuthContext';
 import Login from './auth/Login';
 import CryptoTable from './content/CryptoTable';
 import Portfolio from './content/Portfolio';
-import { useState, useEffect, useContext } from 'react';
+import Favorites from './content/Favorites';
+import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 
 function App() {
@@ -38,6 +39,11 @@ function App() {
               </li>
               {username && (
                 <li>
+                  <Link to="/favorites">Favorites</Link>
+                </li>
+              )}
+              {username && (
+                <li>
                   <Link to="/portfolio">Portfolio</Link>
                 </li>
               )}
@@ -48,6 +54,9 @@ function App() {
           </nav>
           <Routes>
             <Route path="/" element={<CryptoTable />} />
+            {username && (
+              <Route path="/favorites" element={<Favorites />} />
+            )}
             {username && (
               <Route path="/portfolio" element={<Portfolio />} />
             )}
