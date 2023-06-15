@@ -4,6 +4,7 @@ import Login from './auth/Login';
 import CryptoTable from './content/CryptoTable';
 import Portfolio from './content/Portfolio';
 import Favorites from './content/Favorites';
+import CryptoNews from './content/CryptoNews'; // Import the CryptoNews component
 import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Link, Routes } from 'react-router-dom';
 
@@ -47,6 +48,9 @@ function App() {
                   <Link to="/portfolio">Portfolio</Link>
                 </li>
               )}
+              <li>
+                <Link to="/news">News</Link>  {/* New link for the news page */}
+              </li>
               <li className="login-container">
                 <Login />
               </li>
@@ -60,6 +64,7 @@ function App() {
             {username && (
               <Route path="/portfolio" element={<Portfolio />} />
             )}
+            <Route path="/news" element={<CryptoNews />} /> {/* New route for the news page */}
           </Routes>
         </div>
       </Router>
