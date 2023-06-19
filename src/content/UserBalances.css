@@ -1,5 +1,3 @@
-/* UserBalances.css */
-
 .userBalances {
   width: 100%;
   border-collapse: separate;
@@ -7,6 +5,7 @@
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   border-radius: 15px;
   overflow: hidden;
+  font-weight: bold;
 }
 
 .userBalances th,
@@ -47,4 +46,10 @@
 
 .innerTable tr:nth-child(even) {
   background-color: rgba(47, 79, 79, 0.1);
+}
+
+.profitArrow {
+  width: 14px;
+  height: 14px;
+  margin-right: 5px;
 }

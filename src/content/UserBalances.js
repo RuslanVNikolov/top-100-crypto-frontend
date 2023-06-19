@@ -10,11 +10,19 @@ const UserBalances = ({ balances }) => {
   const formatMoney = (value) => value === 0 ? 'No Data' : `$${numberWithCommas((value || 0).toFixed(2))}`;
   const formatProfit = (value) => value === 0 ? 'N/A' : `$${numberWithCommas((value || 0).toFixed(2))}`;
 
+  const getProfitColor = (profit) => {
+    return profit < 0 ? 'red' : 'green';
+  };
+
+  const renderProfitArrow = (profit) => {
+    const arrowIcon = profit < 0 ? '/red-arrow.png' : '/green-arrow.png';
+    return <img src={arrowIcon} alt="profit-arrow" className="profitArrow" />;
+  };
+
   return (
     <table className="userBalances">
       <thead>
         <tr>
-          <th>#</th>
           <th>Name</th>
           <th>Symbol</th>
           <th>Price</th>
@@ -31,14 +39,19 @@ const UserBalances = ({ balances }) => {
         {balances.map((balance, index) => (
           <React.Fragment key={balance.id}>
             <tr onClick={() => setSelectedBalance(balance.id === selectedBalance ? null : balance.id)}>
-              <td>{index + 1}</td>
               <td>{balance.name}</td>
               <td>{balance.symbol}</td>
               <td>{formatMoney(balance.price)}</td>
               <td>{numberWithCommas(balance.balance)}</td>
               <td>{(balance.percentage || 0).toFixed(2)}%</td>
-              <td>{formatProfit(balance.profit)}</td>
-              <td>{balance.profitPercentage === 0 ? 'N/A' : `${(balance.profitPercentage || 0).toFixed(2)}%`}</td>
+              <td className={getProfitColor(balance.profit)}>
+                {renderProfitArrow(balance.profit)}
+                {formatProfit(Math.abs(balance.profit))}
+              </td>
+              <td className={getProfitColor(balance.profitPercentage)}>
+                {renderProfitArrow(balance.profitPercentage)}
+                {balance.profitPercentage === 0 ? 'N/A' : `${(Math.abs(balance.profitPercentage) || 0).toFixed(2)}%`}
+              </td>
               <td>{formatMoney(balance.averageBuyPrice)}</td>
               <td>{formatMoney(balance.totalValue)}</td>
               <td>

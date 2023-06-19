@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import './Portfolio.css';
 import UserBalances from './UserBalances';
+import { PieChart, Pie, Cell, Tooltip } from 'recharts';
 import Modal from './Modal';
 import { AuthContext } from '../auth/AuthContext';
 
@@ -31,18 +32,16 @@ const Portfolio = () => {
         profitPercentage: parseFloat(balance.profitPercentage),
         averageBuyPrice: parseFloat(balance.averageBuyPrice),
         totalValue: parseFloat(balance.totalValue),
-        transactions: balance.transactions.map(transaction => ({
+        transactions: balance.transactions.map((transaction) => ({
           amount: transaction.amount,
           price: transaction.price,
-          date: transaction.date
-        }))
+          date: transaction.date,
+        })),
       }));
-
-      console.log(userBalances)
 
       setPortfolio({
         ...data,
-        userBalances
+        userBalances,
       });
     } catch (error) {
       console.error('Error fetching user balances:', error);
@@ -65,7 +64,6 @@ const Portfolio = () => {
         throw new Error(`Unable to post transaction (${response.status} ${response.statusText})`);
       }
 
-      // After successfully posting the transaction, close the modal and re-fetch the balances
       setShowModal(false);
       fetchBalances();
     } catch (error) {
@@ -77,20 +75,76 @@ const Portfolio = () => {
     fetchBalances();
   }, [fetchBalances]);
 
-  const isProfit = portfolio.profit >= 0;
+  const numberWithCommas = (x) => {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
+  const formatMoney = (value) => {
+    if (value === 0) {
+      return 'No Data';
+    }
+    const formattedValue = (value || 0).toFixed(2);
+    return `$${numberWithCommas(formattedValue)}`;
+  };
+
+  let totalProfit = portfolio.userBalances.reduce((total, balance) => total + balance.profit, 0);
+  let totalInvestment = portfolio.userBalances.reduce((total, balance) => total + balance.averageBuyPrice * balance.balance, 0);
+  let totalProfitPercentage = totalInvestment !== 0 ? (totalProfit / totalInvestment) * 100 : 0;
+
+  const isProfit = totalProfit >= 0;
+
+  const getColor = (index) => {
+    const red = (index * 50) % 255;
+    const green = (index * 100) % 255;
+    const blue = (index * 150) % 255;
+
+    return `rgb(${red},${green},${blue})`;
+  };
+
+  let data = portfolio.userBalances.filter((balance) => balance.percentage > 0);
+  let others = data.filter((balance) => balance.percentage < 1);
+  let majorBalances = data.filter((balance) => balance.percentage >= 1);
+
+  if (others.length > 0) {
+    let othersTotalPercentage = others.reduce((total, b) => total + b.percentage, 0);
+    majorBalances.push({ name: 'Other', percentage: othersTotalPercentage });
+  }
 
   return (
     <div className="portfolio">
       <div className="header">
         <h2>Your Portfolio</h2>
-        <div className={`profit ${isProfit ? 'profit' : 'loss'}`}>
-          <span className="profitLabel">{isProfit ? 'Profit: ' : 'Loss: '}</span>
-          <span className="profitAmount">${Math.abs(portfolio.profit || 0).toFixed(2)}</span>
-          <span className="profitPercentage">({Math.abs(portfolio.profitPercentage || 0).toFixed(2)}%)</span>
-        </div>
+        {totalProfit !== 0 && (
+          <div className={`profit ${isProfit ? 'profit' : 'loss'}`}>
+            <span className="profitLabel">{isProfit ? 'Profit: ' : 'Loss: '}</span>
+            <span className="profitValue">{formatMoney(totalProfit)} ({totalProfitPercentage.toFixed(2)}%)</span>
+          </div>
+        )}
+      </div>
+      <div className="chart-container">
+        <PieChart width={800} height={400}>
+          <Pie
+            data={majorBalances}
+            dataKey="percentage"
+            nameKey="name"
+            cx="50%"
+            cy="50%"
+            outerRadius={150}
+            fill="#8884d8"
+            labelLine={false}
+            label={({ name, percent }) => `${name} ${(percent * 100).toFixed(2)}%`}
+          >
+            {majorBalances.map((entry, index) => (
+              <Cell key={`cell-${index}`} fill={getColor(index)} />
+            ))}
+          </Pie>
+          <Tooltip />
+        </PieChart>
       </div>
       <UserBalances balances={portfolio.userBalances} />
-      <div className="totalValue">Total Value: ${(portfolio.totalValue || 0).toFixed(2)}</div>
+      {portfolio.totalValue && (
+        <div className="totalValue">Total Value: ${portfolio.totalValue.toFixed(2)}</div>
+      )}
       <button className="editButton" onClick={() => setShowModal(true)}>
         Add Transaction
       </button>
@@ -99,7 +153,7 @@ const Portfolio = () => {
           onClose={() => setShowModal(false)}
           name="Add Balance"
           onBalanceFormSubmit={handleBalanceFormSubmit}
-          modalSize='medium'
+          modalSize="medium"
         />
       )}
     </div>
