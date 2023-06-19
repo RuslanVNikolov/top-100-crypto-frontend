@@ -7,7 +7,7 @@ import { AuthContext } from '../auth/AuthContext';
 const API_URL = 'http://localhost:8080/portfolios';
 
 const Portfolio = () => {
-  const [balances, setBalances] = useState([]);
+  const [portfolio, setPortfolio] = useState({ userBalances: [] });
   const [showModal, setShowModal] = useState(false);
   const { authState } = useContext(AuthContext);
   const { token } = authState;
@@ -21,13 +21,29 @@ const Portfolio = () => {
       const data = await response.json();
 
       const userBalances = data.userBalances.map((balance) => ({
-        id: balance.currency.id,
+        id: balance.currency.shortName,
         name: balance.currency.name,
         symbol: balance.currency.shortName,
-        balance: parseFloat(balance.totalAmount),
+        price: parseFloat(balance.currency.valueUsd),
+        balance: parseFloat(balance.amount),
+        percentage: parseFloat(balance.percentage),
+        profit: parseFloat(balance.profit),
+        profitPercentage: parseFloat(balance.profitPercentage),
+        averageBuyPrice: parseFloat(balance.averageBuyPrice),
+        totalValue: parseFloat(balance.totalValue),
+        transactions: balance.transactions.map(transaction => ({
+          amount: transaction.amount,
+          price: transaction.price,
+          date: transaction.date
+        }))
       }));
 
-      setBalances(userBalances);
+      console.log(userBalances)
+
+      setPortfolio({
+        ...data,
+        userBalances
+      });
     } catch (error) {
       console.error('Error fetching user balances:', error);
     }
@@ -35,7 +51,6 @@ const Portfolio = () => {
 
   const handleBalanceFormSubmit = async (formData) => {
     try {
-      // Here, you would typically make a POST request to your server to update the user's balances
       const headers = new Headers();
       headers.append('Authorization', `Bearer ${token}`);
       headers.append('Content-Type', 'application/json');
@@ -50,9 +65,6 @@ const Portfolio = () => {
         throw new Error(`Unable to post transaction (${response.status} ${response.statusText})`);
       }
 
-      const data = await response.json();
-      console.log(data)
-
       // After successfully posting the transaction, close the modal and re-fetch the balances
       setShowModal(false);
       fetchBalances();
@@ -65,10 +77,20 @@ const Portfolio = () => {
     fetchBalances();
   }, [fetchBalances]);
 
+  const isProfit = portfolio.profit >= 0;
+
   return (
     <div className="portfolio">
-      <h2>Your Portfolio</h2>
-      <UserBalances balances={balances} />
+      <div className="header">
+        <h2>Your Portfolio</h2>
+        <div className={`profit ${isProfit ? 'profit' : 'loss'}`}>
+          <span className="profitLabel">{isProfit ? 'Profit: ' : 'Loss: '}</span>
+          <span className="profitAmount">${Math.abs(portfolio.profit || 0).toFixed(2)}</span>
+          <span className="profitPercentage">({Math.abs(portfolio.profitPercentage || 0).toFixed(2)}%)</span>
+        </div>
+      </div>
+      <UserBalances balances={portfolio.userBalances} />
+      <div className="totalValue">Total Value: ${(portfolio.totalValue || 0).toFixed(2)}</div>
       <button className="editButton" onClick={() => setShowModal(true)}>
         Add Transaction
       </button>

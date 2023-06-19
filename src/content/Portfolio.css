@@ -1,25 +1,60 @@
 /* Portfolio.css */
 .portfolio {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-    box-sizing: border-box;
-  }
-  
-  .editButton {
-    display: inline-block;
-    background-color: #2abf7a;
-    color: #fff;
-    font-weight: bold;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 1rem;
-  }
-  
-  .editButton:hover {
-    background-color: #249c6b;
-  }
-  
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.profit,
+.loss {
+  color: white;
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: 5px;
+}
+
+.profit {
+  background-color: #2abf7a; /* Updated the green color */
+}
+
+.loss {
+  background-color: red;
+}
+
+.profitAmount, 
+.profitLabel, 
+.profitPercentage {
+  font-size: 1.5rem;
+}
+
+.editButton {
+  display: inline-block;
+  background-color: #2abf7a;
+  color: #fff;
+  font-weight: bold;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+.editButton:hover {
+  background-color: #249c6b;
+}
+
+.totalValue {
+  font-size: 1.5rem;
+  text-align: right;
+  margin-top: 1rem;
+  font-weight: bold; /* Made Total Value bold */
+}

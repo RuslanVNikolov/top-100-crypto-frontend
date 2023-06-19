@@ -2,12 +2,15 @@
 
 .userBalances {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border-radius: 15px;
+  overflow: hidden;
 }
 
 .userBalances th,
-.userBalances td {
+.userBalances td:not(:last-child) {
   padding: 12px;
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -24,4 +27,24 @@
 
 .userBalances tr:hover {
   background-color: rgba(221, 221, 221, 0.7);
+}
+
+.innerTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.innerTable th,
+.innerTable td {
+  padding: 8px;
+  text-align: left;
+}
+
+.innerTable th {
+  background-color: #091c2b;
+  color: #fff;
+}
+
+.innerTable tr:nth-child(even) {
+  background-color: rgba(47, 79, 79, 0.1);
 }
