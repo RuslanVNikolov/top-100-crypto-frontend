@@ -7,7 +7,7 @@ const CryptoNews = () => {
   useEffect(() => {
     const fetchNews = async () => {
       try {
-        const response = await fetch('https://cryptonews-api.com/api/v1/category?section=general&items=3&page=1&token=2rgtbkv87wratvnffi0va13xxhudq00zx21xsalg');
+        const response = await fetch('https://cryptonews-api.com/api/v1/category?section=general&items=10&page=1&token=klxzfmn8f9okgtp5bbxgrb4xxtqh6etb9zx1kiw9');
         const jsonData = await response.json();
         setNewsData(jsonData.data);
       } catch (error) {

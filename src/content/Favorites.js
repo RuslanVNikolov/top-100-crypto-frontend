@@ -9,6 +9,7 @@ const Favorites = () => {
   const [cryptos, setCryptos] = useState([]);
   const [selectedCrypto, setSelectedCrypto] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newsData, setNewsData] = useState([]);
 
   const { authState } = useContext(AuthContext);
   const { token } = authState;
@@ -24,8 +25,22 @@ const Favorites = () => {
       throw new Error(`Unable to fetch favorite cryptos (${response.status} ${response.statusText})`);
     }
     const data = await response.json();
-    return data.filter(userCurrency => userCurrency.favorite).map(userCurrency => userCurrency.currency);
+    const favoriteCurrencies = data.filter(userCurrency => userCurrency.favorite);
+    const shortNames = favoriteCurrencies.map(userCurrency => userCurrency.currency.shortName);
+    const cryptoNames = shortNames.join(',');
+    mapResponse(favoriteCurrencies.map(userCurrency => userCurrency.currency));
+    return cryptoNames;
   }, [token]);
+
+  const getCryptoNews = useCallback(async (cryptoNames) => {
+    try {
+      const response = await fetch(`https://cryptonews-api.com/api/v1?tickers=${cryptoNames}&items=3&page=1&token=klxzfmn8f9okgtp5bbxgrb4xxtqh6etb9zx1kiw9`);
+      const jsonData = await response.json();
+      setNewsData(jsonData.data);
+    } catch (error) {
+      console.error('Failed to fetch news', error);
+    }
+  }, []);
 
   const handleStarClick = useCallback(async (e, cmcId) => {
     e.stopPropagation();
@@ -96,8 +111,10 @@ const Favorites = () => {
   };
 
   useEffect(() => {
-    getFavoriteCurrenciesRequest().then((data) => mapResponse(data));
-  }, [getFavoriteCurrenciesRequest, mapResponse]);
+    getFavoriteCurrenciesRequest().then((cryptoNames) => {
+      getCryptoNews(cryptoNames);
+    });
+  }, [getFavoriteCurrenciesRequest, getCryptoNews]);
 
   return (
     <>
@@ -117,6 +134,17 @@ const Favorites = () => {
         </tbody>
       </table>
       {isModalOpen && <Modal onClose={closeModal} crypto={selectedCrypto} showCloseButton={true} modalSize='large' />}
+      <div className="cryptoNewsContainer">
+        {newsData.map((newsItem, index) => (
+          <div className="newsItem" key={newsItem.news_url} onClick={() => window.open(newsItem.news_url, "_blank")}>
+            <img className="thumbnail" src={newsItem.image_url} alt={newsItem.title} />
+            <div className="content">
+              <h2 className="title">{newsItem.title}</h2>
+              <p className="description">{newsItem.text.length > 400 ? `${newsItem.text.substring(0, 400)}...` : newsItem.text}</p>
+            </div>
+          </div>
+        ))}
+      </div>
     </>
   );
 };

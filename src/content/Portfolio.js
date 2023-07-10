@@ -143,7 +143,7 @@ const Portfolio = () => {
       </div>
       <UserBalances balances={portfolio.userBalances} />
       {portfolio.totalValue && (
-        <div className="totalValue">Total Value: ${portfolio.totalValue.toFixed(2)}</div>
+        <div className="totalValue">Total Value: {formatMoney(portfolio.totalValue)}</div>
       )}
       <button className="editButton" onClick={() => setShowModal(true)}>
         Add Transaction
